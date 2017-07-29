@@ -73,7 +73,4 @@ function lightClass:draw()
   end
 end
 
-function lightClass:update(dt)
-end
-
 return Light

@@ -26,7 +26,6 @@ function roundClass:isUnique(deadBulb)
   if deadBulbLength > 0 then
     for idx, db in ipairs(deadBulbs) do
       if deadBulb == db then
-        print('deadBulb is already in array')
         unique = false
         break
       end
@@ -56,20 +55,15 @@ end
 function checkGuesses()
   local deadBulbLength = table.getn(deadBulbs)
   local deadBulbGuessesLength = table.getn(deadBulbGuesses)
-  print('have we cleared guesses? ', deadBulbGuessesLength)
   for idx, guess in ipairs(deadBulbGuesses) do
-    print('guess: ', guess)
-    print('deadbulb idx: ', idx)
-    print('deadbulb check: ', deadBulbs[idx])
-    print('deadbulb reverse check: ', deadBulbs[(deadBulbLength + 1 - idx)])
     if guess ~= deadBulbs[idx] then
-      over = true
+      lost = true
       print('you lost.')
       return false
     end
   end
   if table.getn(deadBulbGuesses) == table.getn(deadBulbs) then
-    over = true
+    won = true
     print('you won!')
   end
   return true
