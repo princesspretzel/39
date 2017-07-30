@@ -2,6 +2,16 @@ local Light = require('light')
 local Round = require('round')
 local Star = require('star')
 
+lights = { }
+
+function gameReset()
+	poweringDown = false
+	doneFlashing = false
+	playerTurn = false
+	lost = false
+	won = false
+end
+
 -- convert lines of lights to number of bulbs
 function levelsToLightBulbs(levelNum)
 	local total = 0
@@ -35,7 +45,6 @@ function stringLights(num)
 end
 
 function love.load()
-	lights = { }
 	gameWidth, gameHeight = love.graphics.getDimensions()
 	won = false
 	lost = false
@@ -43,9 +52,8 @@ function love.load()
 	-- io.write(' ')love.graphics.printf(text, 0, 0, love.graphics.getWidth())
 	-- io.write('Choose a level from 3 to 10: ')
 	-- level = io.read()
-
-	local level = 4
-	local guesses = 5
+	local level = 7
+	local guesses = 3
 	stringLights(level)
 
 	currentRound = Round(level, guesses)
@@ -64,8 +72,18 @@ function love.draw()
 	end
 end
 
+function love.keypressed(key)
+	if key == "escape" then
+		love.event.quit()
+	end
+	if key == "return" then
+		gameReset()
+		love.event.quit("restart")
+	end
+end
+
 function love.mousepressed(x, y, button, istouch)
-	if button == 1 then
+	if button == 1 and (currentRound.playerTurn == true) then
 		for idx, light in ipairs(lights) do
 			light:mouseCollision(x, y)
 		end
@@ -75,4 +93,7 @@ end
 function love.update(dt)
 	currentRound:update(dt)
 	star:update(dt)
+	for idx, light in ipairs(lights) do
+		light:update(dt)
+	end
 end

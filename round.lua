@@ -13,7 +13,7 @@ function Round(level, guesses)
     flashClockEnd = 3*guesses,
     playerTurn = false,
     doneFlashing = false,
-    over = false
+    poweringDown = false
   }
   setmetatable(instance, roundClass)
   return instance
@@ -58,22 +58,31 @@ function checkGuesses()
   for idx, guess in ipairs(deadBulbGuesses) do
     if guess ~= deadBulbs[idx] then
       lost = true
-      print('you lost.')
-      return false
     end
   end
   if table.getn(deadBulbGuesses) == table.getn(deadBulbs) then
     won = true
-    print('you won!')
   end
-  return true
 end
 
-function roundClass:giveControlToPlayer()
+function roundClass:turnOnAllBulbs()
   for idx, serialization in ipairs(deadBulbs) do
     lights[serialization]:turnOn()
   end
+end
+
+function roundClass:giveControlToPlayer()
   self.playerTurn = true
+end
+
+function roundClass:takeControlFromPlayer()
+  self.playerTurn = false
+end
+
+function roundClass:powerOff()
+  for idx, light in ipairs(lights) do
+    light:setPowerOffClocks(idx)
+  end
 end
 
 function roundClass:setFlashClock(startTime)
@@ -99,8 +108,19 @@ function roundClass:update(dt)
   if self.playerTurn == false then
     if self.doneFlashing == true then
       self:giveControlToPlayer()
+      self:turnOnAllBulbs()
     else
       self:countDownFlashClock(dt)
+    end
+  end
+  if won == true then
+    self:takeControlFromPlayer()
+  end
+  if lost == true then
+    self:takeControlFromPlayer()
+    if self.poweringDown == false then
+      self.poweringDown = true
+      self:powerOff()
     end
   end
 end
