@@ -4,14 +4,6 @@ local Star = require('star')
 
 lights = { }
 
-function gameReset()
-  poweringDown = false
-  doneFlashing = false
-  playerTurn = false
-  lost = false
-  won = false
-end
-
 -- convert lines of lights to number of bulbs
 function levelsToLightBulbs(levelNum)
   local total = 0
@@ -49,15 +41,17 @@ function love.load()
   won = false
   lost = false
 
-  -- io.write(' ')love.graphics.printf(text, 0, 0, love.graphics.getWidth())
-  -- io.write('Choose a level from 3 to 10: ')
-  -- level = io.read()
-  local level = 7
-  local guesses = 3
-  stringLights(level)
+  -- don't want to listen to this during development... or ever
+  -- music = love.audio.newSource('/audio/bells.mp3')
+  -- music:setLooping(true)
+  -- music:play()
 
-  currentRound = Round(level, guesses)
-  currentRound:generate(levelsToLightBulbs(level), guesses)
+  local lines = 7
+  local guesses = 3
+  totalLights = levelsToLightBulbs(lines)
+  stringLights(lines)
+  currentRound = Round(guesses)
+  currentRound:generate(totalLights, guesses)
 
   local starFile = '/images/basestart.png'
   local starImage = love.graphics.newImage(starFile)
@@ -77,7 +71,6 @@ function love.keypressed(key)
     love.event.quit()
   end
   if key == "return" then
-    gameReset()
     love.event.quit("restart")
   end
 end

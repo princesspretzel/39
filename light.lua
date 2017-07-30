@@ -19,10 +19,6 @@ function Light(x, y, s)
   return instance
 end
 
-function clearGuesses()
-  deadBulbGuesses = { }
-end
-
 function lightClass:setPowerOffClocks()
   local timeStep = .1
   local base = table.getn(lights)

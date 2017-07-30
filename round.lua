@@ -1,14 +1,14 @@
 local roundClass = { }
 roundClass.__index = roundClass
 
--- the Light class needs to see these too
+-- light needs access to these
 deadBulbs = { }
 deadBulbGuesses = { }
 
-function Round(level, guesses)
+function Round(guesses)
   local instance = {
     class = 'round',
-    numLights = level,
+    numLights = guesses,
     flashClockStart = 0,
     flashClockEnd = 3*guesses,
     playerTurn = false,
@@ -17,6 +17,24 @@ function Round(level, guesses)
   }
   setmetatable(instance, roundClass)
   return instance
+end
+
+function clearGuesses()
+  deadBulbGuesses = { }
+end
+
+function clearSet()
+  deadBulbs = { }
+end
+
+function roundClass:nextLevel()
+  poweringDown = false
+  doneFlashing = false
+  playerTurn = false
+  lost = false
+  won = false
+  clearGuesses()
+  clearSet()
 end
 
 -- deadBulb is a serialization number
@@ -34,6 +52,8 @@ function roundClass:isUnique(deadBulb)
   return unique
 end
 
+-- numLights will probably never change
+-- numSet will increase with level
 function roundClass:generate(numLights, numSet)
   -- https://stackoverflow.com/questions/20154991/generating-uniform-random-numbers-in-lua
   math.randomseed(os.time())
@@ -115,6 +135,7 @@ function roundClass:update(dt)
   end
   if won == true then
     self:takeControlFromPlayer()
+    -- self:nextLevel()
   end
   if lost == true then
     self:takeControlFromPlayer()
