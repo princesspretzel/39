@@ -87,9 +87,6 @@ function love.keypressed(key)
   if key == "return" and gameStart == true then
     love.event.quit("restart")
   end
-  if key == "return" and gameStart == false then
-    gameStart = true
-  end
 end
 
 function love.mousepressed(x, y, button, istouch)

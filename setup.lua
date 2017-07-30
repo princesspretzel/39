@@ -27,7 +27,7 @@ function setupClass:chooseLevel(x, y)
   -- default
   local level = self.level
   -- checks if you are on the choice line
-  if (y <= gameHeight/2 + 30) and (y >= gameHeight/2 - 30) then
+  if (y <= gameHeight/2 + 60) and (y >= gameHeight/2) then
     local levels = self:levelEnums()
     if (x <= 130 and x >= 70) then
       level = levels[1]
@@ -46,13 +46,12 @@ function setupClass:chooseLevel(x, y)
 end
 
 function setupClass:draw()
-  love.graphics.print('Fix the bulbs that lost power by clicking on them in the order they went out.', 40, gameHeight/2 - 30)
-  love.graphics.print('Click to choose your level: ', 40, gameHeight/2 - 10)
-  love.graphics.print('Easy', 100, gameHeight/2 + 10)
-  love.graphics.print('Medium', 200, gameHeight/2 + 10)
-  love.graphics.print('Hard', 300, gameHeight/2 + 10)
-  love.graphics.print('Insane', 400, gameHeight/2 + 10)
-  love.graphics.print('Press enter to start.', 40, gameHeight/2 + 30)
+  love.graphics.print('Fix the bulbs that lost power by clicking on them in the order they went out.', 40, gameHeight/2 - 50)
+  love.graphics.print('Click to choose your level: ', 40, gameHeight/2)
+  love.graphics.print('Easy', 100, gameHeight/2 + 30)
+  love.graphics.print('Medium', 200, gameHeight/2 + 30)
+  love.graphics.print('Hard', 300, gameHeight/2 + 30)
+  love.graphics.print('Insane', 400, gameHeight/2 + 30)
 end
 
 return Setup
