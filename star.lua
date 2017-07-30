@@ -3,15 +3,18 @@ local stars = require('stars')
 local starClass = { }
 starClass.__index = starClass
 
-function Star(image, width, height)
+function Star()
+  local starFile = '/images/basestart.png'
+  local image = love.graphics.newImage(starFile)
+  local width, height = image:getDimensions( )
   local instance = {
     class = 'star',
     i = image,
     w = width,
     h = height,
-    r = 0, --radians, for spin
-    x = ((gameWidth / 2) - (width / 2)),
-    y = 20
+    r = .2,
+    x = ((gameWidth / 2) - (width / 2) + 45),
+    y = -10
   }
   setmetatable(instance, starClass)
   return instance
@@ -28,22 +31,20 @@ end
 
 function starClass:winningImageOscillation(idx)
   local starFile = self:getWinningImageAtIdx(idx)
-  self:assignNewImage(starFile)
+  self:assignNewImageFromFile(starFile)
 end
 
 function starClass:won()
   local choice = math.random(1,2)
   self:winningImageOscillation(choice)
-  -- this might be fun (later)
-  -- self.r = math.random(-2,2)
 end
 
 function starClass:lost()
   local lostStarFile = '/images/loststart.png'
-  starClass:assignNewImageFromFile(lostStarFile)
+  self:assignNewImageFromFile(lostStarFile)
 end
 
-function starClass:nextLevel(lvl)
+function starClass:levelImage(lvl)
   local starFile = stars[lvl]
   if starFile == nil then
     starFile = '/images/basestart.png'
@@ -61,13 +62,15 @@ function starClass:draw()
 end
 
 function starClass:update(dt)
-  if won == true then
+  if wonGame == true then
     self:won()
   end
   if lost == true then
     self:lost()
   end
-  self:nextLevel(currentRound.level)
+  if lost == false and wonGame == false then
+    self:levelImage(currentRound.level)
+  end
 end
 
 return Star

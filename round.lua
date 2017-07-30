@@ -41,14 +41,13 @@ function roundClass:clearStoredVariables()
   self.poweringDown = false
   self.doneFlashing = false
   self.playerTurn = false
-  lost = false
-  won = false
+  wonLevel = false
   clearGuesses()
   clearSet()
 end
 
 function roundClass:nextLevel()
-  self:turnOnDeadBulbs() -- this acts on dead bulbs only
+  self:turnOnDeadBulbs()
   self:clearStoredVariables()
   self:resetAllBulbs()
   self.level = self.level + 1
@@ -100,7 +99,7 @@ function checkGuesses()
     end
   end
   if table.getn(deadBulbGuesses) == table.getn(deadBulbs) then
-    won = true
+    wonLevel = true
   end
 end
 
@@ -151,6 +150,13 @@ function roundClass:countDownFlashClock(dt)
   self.flashClockEnd = self.flashClockEnd - dt
 end
 
+function isFinalLightOff()
+  if (lights[level].flashClockEnd <= lights[level].flashClockEnd) and (lights[level].on == false) and (lost == true) then
+    return true
+  end
+  return false
+end
+
 function roundClass:update(dt)
   if self.playerTurn == false then
     if self.doneFlashing == true then
@@ -160,13 +166,15 @@ function roundClass:update(dt)
       self:countDownFlashClock(dt)
     end
   end
-  if won == true then
+  if wonLevel == true then
     self:takeControlFromPlayer()
-    if self.level <= totalLights then
+    if self.level < maxLevel then
       self:nextLevel()
       -- these will get you into countdown above once
       self.playerTurn = false
       self.doneFlashing = false
+    else
+      wonGame = true
     end
   end
   if lost == true then

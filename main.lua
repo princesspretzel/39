@@ -1,6 +1,8 @@
 local Light = require('light')
 local Round = require('round')
 local Star = require('star')
+local Tree = require('tree')
+-- local Setup = require('setup')
 
 lights = { }
 
@@ -37,8 +39,13 @@ function stringLights(num)
 end
 
 function love.load()
+  love.window.setTitle( 'Christmas is ruined' )
   gameWidth, gameHeight = love.graphics.getDimensions()
-  won = false
+
+  gameStart = true
+
+  wonGame = false
+  wonLevel = false
   lost = false
 
   -- don't want to listen to this during development... or ever
@@ -53,20 +60,23 @@ function love.load()
 
   -- set the level, which is the number of lights that will go out from a gameplay POV
   local startLevel = 1
+  maxLevel = 3
   currentRound = Round(startLevel)
   currentRound:generate()
 
-  -- this will move out of here probably, or be deleted
-  local starFile = '/images/basestart.png'
-  local starImage = love.graphics.newImage(starFile)
-  local starWidth, starHeight = starImage:getDimensions( )
-  star = Star(starImage, starWidth, starHeight)
+  star = Star()
+  tree = Tree()
 end
 
 function love.draw()
-  star:draw()
-  for idx, light in ipairs(lights) do
-    light:draw()
+  if gameStart == true then
+    tree:draw()
+    star:draw()
+    for idx, light in ipairs(lights) do
+      light:draw()
+    end
+  else
+    setup:draw()
   end
 end
 
@@ -74,23 +84,34 @@ function love.keypressed(key)
   if key == "escape" then
     love.event.quit()
   end
-  if key == "return" then
+  if key == "return" and gameStart == true then
     love.event.quit("restart")
+  end
+  if key == "return" and gameStart == false then
+    gameStart = true
   end
 end
 
 function love.mousepressed(x, y, button, istouch)
-  if button == 1 and (currentRound.playerTurn == true) then
-    for idx, light in ipairs(lights) do
-      light:mouseCollision(x, y)
+  if gameStart == true then
+    if button == 1 and (currentRound.playerTurn == true) then
+      for idx, light in ipairs(lights) do
+        light:mouseCollision(x, y)
+      end
     end
+  -- else
+  --   if button == 1 and setup:levelChoiceCollision() then
+  --     setup:setLevel()
+  --   end
   end
 end
 
 function love.update(dt)
-  currentRound:update(dt)
-  star:update(dt)
-  for idx, light in ipairs(lights) do
-    light:update(dt)
+  if gameStart == true then
+    currentRound:update(dt)
+    star:update(dt)
+    for idx, light in ipairs(lights) do
+      light:update(dt)
+    end
   end
 end
