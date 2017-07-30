@@ -20,21 +20,40 @@ function Round(guesses)
 end
 
 function clearGuesses()
-  deadBulbGuesses = { }
+  local len = table.getn(deadBulbGuesses)
+  local n = 1
+  while n <= len do
+    table.remove(deadBulbGuesses, 1)
+    n = n + 1
+  end
 end
 
 function clearSet()
-  deadBulbs = { }
+  local len = table.getn(deadBulbs)
+  local n = 1
+  while n <= len do
+    table.remove(deadBulbs, 1)
+    n = n + 1
+  end 
 end
 
-function roundClass:nextLevel()
-  poweringDown = false
-  doneFlashing = false
-  playerTurn = false
+function roundClass:clearStoredVariables()
+  self.poweringDown = false
+  self.doneFlashing = false
+  self.playerTurn = false
   lost = false
   won = false
   clearGuesses()
   clearSet()
+end
+
+function roundClass:nextLevel()
+  self:turnOnDeadBulbs() -- this acts on dead bulbs only
+  self:clearStoredVariables()
+  self:resetAllBulbs()
+  self.numLights = self.numLights + 1
+  self:generate(totalLights, self.numLights)
+  self:setFlashClock(self.numLights)
 end
 
 -- deadBulb is a serialization number
@@ -58,6 +77,7 @@ function roundClass:generate(numLights, numSet)
   -- https://stackoverflow.com/questions/20154991/generating-uniform-random-numbers-in-lua
   math.randomseed(os.time())
   local n = 1
+  print('level: ', numSet)
   while n <= numSet do
     local serialization = math.random(1, numLights)
     local unique = self:isUnique(serialization)
@@ -66,6 +86,7 @@ function roundClass:generate(numLights, numSet)
       lights[serialization]:setFlashClock(n)
       n = n + 1
     end
+    print('dead bulb sequence (backwards): ', serialization)
   end
 end
 
@@ -85,7 +106,8 @@ function checkGuesses()
   end
 end
 
-function roundClass:turnOnAllBulbs()
+-- the effect of this should be all bulbs are on
+function roundClass:turnOnDeadBulbs()
   for idx, serialization in ipairs(deadBulbs) do
     lights[serialization]:turnOn()
   end
@@ -99,15 +121,22 @@ function roundClass:takeControlFromPlayer()
   self.playerTurn = false
 end
 
+function roundClass:resetAllBulbs()
+  for idx, light in ipairs(lights) do
+    light:resetState()
+  end
+end
+
 function roundClass:powerOff()
+  self.doneFlashing = false
   for idx, light in ipairs(lights) do
     light:setPowerOffClocks(idx)
   end
 end
 
-function roundClass:setFlashClock(startTime)
-  self.flashClockStart = self.flashClockStart + startTime
-  self.flashClockEnd = self.flashClockEnd + startTime
+function roundClass:setFlashClock(numLights)
+  self.flashClockStart = 0
+  self.flashClockEnd = self.flashClockStart + (3*numLights)
 end
 
 function roundClass:countDownFlashClock(dt)
@@ -128,14 +157,19 @@ function roundClass:update(dt)
   if self.playerTurn == false then
     if self.doneFlashing == true then
       self:giveControlToPlayer()
-      self:turnOnAllBulbs()
+      self:turnOnDeadBulbs()
     else
       self:countDownFlashClock(dt)
     end
   end
   if won == true then
     self:takeControlFromPlayer()
-    -- self:nextLevel()
+    if self.numLights <= totalLights then
+      self:nextLevel()
+      -- these will get you into countdown above once
+      self.playerTurn = false
+      self.doneFlashing = false
+    end
   end
   if lost == true then
     self:takeControlFromPlayer()

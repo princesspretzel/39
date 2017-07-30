@@ -47,7 +47,7 @@ function love.load()
   -- music:play()
 
   local lines = 7
-  local guesses = 3
+  local guesses = 1
   totalLights = levelsToLightBulbs(lines)
   stringLights(lines)
   currentRound = Round(guesses)

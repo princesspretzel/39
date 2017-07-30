@@ -9,7 +9,6 @@ function Light(x, y, s)
     flashClockStart = 0, -- harcode alert, timeInterval-aware
     flashClockEnd = 2, -- harcode alert, timeInterval-aware
     timeInterval = 3, -- start to end inclusive
-    doneFlashing = false,
     poweringDown = false,
     r = 10,
     x = x,
@@ -33,6 +32,12 @@ end
 
 function lightClass:turnOn()
   self.on = true
+end
+
+function lightClass:resetState()
+  self.poweringDown = false
+  self.flashClockStart = 0
+  self.flashClockEnd = 2
 end
 
 function lightClass:setFlashClock(setNum)

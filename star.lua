@@ -15,7 +15,7 @@ function Star(image, width, height)
   return instance
 end
 
-function starClass:getImageAtIdx(idx)
+function starClass:getWinningImageAtIdx(idx)
   local starFiles = { }
   local winStar1File = '/images/winstar1t.png'
   table.insert(starFiles, winStar1File)
@@ -25,7 +25,7 @@ function starClass:getImageAtIdx(idx)
 end
 
 function starClass:winningImageOscillation(idx)
-  local starFile = self:getImageAtIdx(idx)
+  local starFile = self:getWinningImageAtIdx(idx)
   local currentImage = love.graphics.newImage(starFile)
   self.i = currentImage
 end
@@ -34,6 +34,10 @@ function starClass:won()
   local choice = math.random(1,2)
   self:winningImageOscillation(choice)
   -- self.r = math.random(-2,2)
+end
+
+function starClass:nextLevel()
+  -- will access the stars.lua hash
 end
 
 function starClass:lost()
