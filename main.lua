@@ -2,7 +2,7 @@ local Light = require('light')
 local Round = require('round')
 local Star = require('star')
 local Tree = require('tree')
--- local Setup = require('setup')
+local Setup = require('setup')
 
 lights = { }
 
@@ -42,8 +42,8 @@ function love.load()
   love.window.setTitle( 'Christmas is ruined' )
   gameWidth, gameHeight = love.graphics.getDimensions()
 
-  gameStart = true
-
+  -- game state variables
+  gameStart = false
   wonGame = false
   wonLevel = false
   lost = false
@@ -58,9 +58,9 @@ function love.load()
   totalLights = levelsToLightBulbs(lines)
   stringLights(lines)
 
-  -- set the level, which is the number of lights that will go out from a gameplay POV
   local startLevel = 1
-  maxLevel = 3
+  -- set the level, which is the number of lights that will go out from a gameplay POV
+  setup = Setup()
   currentRound = Round(startLevel)
   currentRound:generate()
 
@@ -99,10 +99,12 @@ function love.mousepressed(x, y, button, istouch)
         light:mouseCollision(x, y)
       end
     end
-  -- else
-  --   if button == 1 and setup:levelChoiceCollision() then
-  --     setup:setLevel()
-  --   end
+  else
+    if button == 1 then
+      setup:chooseLevel(x, y)
+      maxLevel = setup.level
+      gameStart = true
+    end
   end
 end
 
