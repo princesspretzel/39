@@ -1,7 +1,9 @@
+local stars = require('stars')
+
 local starClass = { }
 starClass.__index = starClass
 
-function Star(image, width, height) 
+function Star(image, width, height)
   local instance = {
     class = 'star',
     i = image,
@@ -26,24 +28,32 @@ end
 
 function starClass:winningImageOscillation(idx)
   local starFile = self:getWinningImageAtIdx(idx)
-  local currentImage = love.graphics.newImage(starFile)
-  self.i = currentImage
+  self:assignNewImage(starFile)
 end
 
 function starClass:won()
   local choice = math.random(1,2)
   self:winningImageOscillation(choice)
+  -- this might be fun (later)
   -- self.r = math.random(-2,2)
-end
-
-function starClass:nextLevel()
-  -- will access the stars.lua hash
 end
 
 function starClass:lost()
   local lostStarFile = '/images/loststart.png'
-  local currentImage = love.graphics.newImage(lostStarFile)
-  self.i = currentImage
+  starClass:assignNewImageFromFile(lostStarFile)
+end
+
+function starClass:nextLevel(lvl)
+  local starFile = stars[lvl]
+  if starFile == nil then
+    starFile = '/images/basestart.png'
+  end
+  self:assignNewImageFromFile(starFile)
+end
+
+function starClass:assignNewImageFromFile(starFile)
+  local starImage = love.graphics.newImage(starFile)
+  self.i = starImage
 end
 
 function starClass:draw()
@@ -57,6 +67,7 @@ function starClass:update(dt)
   if lost == true then
     self:lost()
   end
+  self:nextLevel(currentRound.level)
 end
 
 return Star

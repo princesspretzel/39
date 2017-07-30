@@ -45,14 +45,18 @@ function love.load()
   -- music = love.audio.newSource('/audio/bells.mp3')
   -- music:setLooping(true)
   -- music:play()
-
+  
+  -- used to build the game board
   local lines = 7
-  local guesses = 1
   totalLights = levelsToLightBulbs(lines)
   stringLights(lines)
-  currentRound = Round(guesses)
-  currentRound:generate(totalLights, guesses)
 
+  -- set the level, which is the number of lights that will go out from a gameplay POV
+  local startLevel = 1
+  currentRound = Round(startLevel)
+  currentRound:generate()
+
+  -- this will move out of here probably, or be deleted
   local starFile = '/images/basestart.png'
   local starImage = love.graphics.newImage(starFile)
   local starWidth, starHeight = starImage:getDimensions( )

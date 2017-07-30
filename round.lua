@@ -5,12 +5,12 @@ roundClass.__index = roundClass
 deadBulbs = { }
 deadBulbGuesses = { }
 
-function Round(guesses)
+function Round(lvl)
   local instance = {
     class = 'round',
-    numLights = guesses,
+    level = lvl,
     flashClockStart = 0,
-    flashClockEnd = 3*guesses,
+    flashClockEnd = 3*lvl,
     playerTurn = false,
     doneFlashing = false,
     poweringDown = false
@@ -51,9 +51,9 @@ function roundClass:nextLevel()
   self:turnOnDeadBulbs() -- this acts on dead bulbs only
   self:clearStoredVariables()
   self:resetAllBulbs()
-  self.numLights = self.numLights + 1
-  self:generate(totalLights, self.numLights)
-  self:setFlashClock(self.numLights)
+  self.level = self.level + 1
+  self:generate()
+  self:setFlashClock()
 end
 
 -- deadBulb is a serialization number
@@ -71,15 +71,13 @@ function roundClass:isUnique(deadBulb)
   return unique
 end
 
--- numLights will probably never change
--- numSet will increase with level
-function roundClass:generate(numLights, numSet)
+function roundClass:generate()
   -- https://stackoverflow.com/questions/20154991/generating-uniform-random-numbers-in-lua
   math.randomseed(os.time())
   local n = 1
-  print('level: ', numSet)
-  while n <= numSet do
-    local serialization = math.random(1, numLights)
+  print('level: ', self.level)
+  while n <= self.level do
+    local serialization = math.random(1, totalLights)
     local unique = self:isUnique(serialization)
     if unique == true then
       table.insert(deadBulbs, 1, serialization)
@@ -134,9 +132,9 @@ function roundClass:powerOff()
   end
 end
 
-function roundClass:setFlashClock(numLights)
+function roundClass:setFlashClock()
   self.flashClockStart = 0
-  self.flashClockEnd = self.flashClockStart + (3*numLights)
+  self.flashClockEnd = self.flashClockStart + (3*self.level)
 end
 
 function roundClass:countDownFlashClock(dt)
@@ -164,7 +162,7 @@ function roundClass:update(dt)
   end
   if won == true then
     self:takeControlFromPlayer()
-    if self.numLights <= totalLights then
+    if self.level <= totalLights then
       self:nextLevel()
       -- these will get you into countdown above once
       self.playerTurn = false
