@@ -27,7 +27,7 @@ function setupClass:chooseLevel(x, y)
   -- default
   local level = self.level
   -- checks if you are on the choice line
-  if (y <= gameHeight/2 + 60) and (y >= gameHeight/2) then
+  if (y <= gameHeight/2 + 110) and (y >= gameHeight/2 + 50) then
     local levels = self:levelEnums()
     if (x <= 130 and x >= 70) then
       level = levels[1]
@@ -46,16 +46,19 @@ function setupClass:chooseLevel(x, y)
 end
 
 function setupClass:draw()
-  love.graphics.print('Fix the bulbs that lost power by clicking on them in the order they went out.', 40, gameHeight/2 - 50)
-  love.graphics.print('Click to choose your level: ', 40, gameHeight/2)
-  love.graphics.print('Easy', 100, gameHeight/2 + 30)
-  love.graphics.print('Medium', 200, gameHeight/2 + 30)
-  love.graphics.print('Hard', 300, gameHeight/2 + 30)
-  love.graphics.print('Insane', 400, gameHeight/2 + 30)
+  local titleImageFile = '/images/smalltransparenttitlewithsnow.png'
+  local titleImage = love.graphics.newImage(titleImageFile)
+  love.graphics.draw(titleImage, 30, -50)
+  love.graphics.print('Fix the tree lights that lost power by clicking on them in the order they went out.', 40, gameHeight/2 - 30)
+  love.graphics.print('Click to choose your difficulty level: ', 40, gameHeight/2 + 30)
+  love.graphics.print('EASY', 100, gameHeight/2 + 80)
+  love.graphics.print('MEDIUM', 200, gameHeight/2 + 80)
+  love.graphics.print('HARD', 300, gameHeight/2 + 80)
+  love.graphics.print('INSANE', 400, gameHeight/2 + 80)
   love.graphics.print('through fading memories we unwind' , 350, gameHeight - 100)
-  love.graphics.print('the clock to show us past hours', 350,gameHeight - 80)
+  love.graphics.print('the clock to show us a past hour', 350,gameHeight - 80)
   love.graphics.print('to watchfully ourselves remind', 350,gameHeight - 60)
-  love.graphics.print('of ways we might retrieve lost powers', 350,gameHeight - 40)
+  love.graphics.print('of how we might retrieve lost power', 350,gameHeight - 40)
 end
 
 return Setup
