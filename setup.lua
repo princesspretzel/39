@@ -52,6 +52,10 @@ function setupClass:draw()
   love.graphics.print('Medium', 200, gameHeight/2 + 30)
   love.graphics.print('Hard', 300, gameHeight/2 + 30)
   love.graphics.print('Insane', 400, gameHeight/2 + 30)
+  love.graphics.print('through fading memories we unwind' , 350, gameHeight - 100)
+  love.graphics.print('the clock to show us past hours', 350,gameHeight - 80)
+  love.graphics.print('to watchfully ourselves remind', 350,gameHeight - 60)
+  love.graphics.print('of ways we might retrieve lost powers', 350,gameHeight - 40)
 end
 
 return Setup
