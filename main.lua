@@ -48,10 +48,9 @@ function love.load()
   wonLevel = false
   lost = false
 
-  -- don't want to listen to this during development... or ever
-  -- music = love.audio.newSource('/audio/bells.mp3')
-  -- music:setLooping(true)
-  -- music:play()
+  music = love.audio.newSource('/audio/bells.mp3')
+  music:setLooping(true)
+  music:play()
   
   -- used to build the game board
   local lines = 7
