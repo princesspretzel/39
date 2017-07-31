@@ -55,6 +55,36 @@ function roundClass:nextLevel()
   self:setFlashClock()
 end
 
+function roundClass:levelTitle()
+  if currentRound.level < 5 then
+    love.window.setTitle('hope u ate yr wheaties this morn')
+  end
+  if currentRound.level >= 5 and currentRound.level < 10 then
+    love.window.setTitle('you are pretty impressive')
+  end
+  if currentRound.level >= 10 and currentRound.level < 15 then
+    love.window.setTitle('this is better than i, the maker of this game, ever did')
+  end
+  if currentRound.level >= 11 and currentRound.level < 20 then
+    love.window.setTitle('holey heck wot a good memory brain you hav')
+  end
+  if currentRound.level >= 21 and currentRound.level < 25 then
+    love.window.setTitle('omgomgomgomgomgomgomgomg')
+  end
+  if currentRound.level >= 26 and currentRound.level < 28 then
+    love.window.setTitle('GO FOR IT WOW BABY JEEBULOUS U CAN DO IT')
+  end
+  if lost == true then
+    love.window.setTitle('the loosermas is ruined')
+  end
+  if (wonGame == true) and (currentRound.level ~= maxLevel) then
+    love.window.setTitle('GREAT JOB! you saved the wintersmas!!! maybe you are ready for an even harder lvl...')
+  end
+  if (wonGame == true) and (currentRound.level == maxLevel) then
+    love.window.setTitle('WOW, AMAZING, YOU are a Golden God!!!')
+  end
+end
+
 -- deadBulb is a serialization number
 function roundClass:isUnique(deadBulb)
   local deadBulbLength = table.getn(deadBulbs)
@@ -74,7 +104,7 @@ function roundClass:generate()
   -- https://stackoverflow.com/questions/20154991/generating-uniform-random-numbers-in-lua
   math.randomseed(os.time())
   local n = 1
-  print('level: ', self.level)
+  print('current level: ', self.level)
   while n <= self.level do
     local serialization = math.random(1, totalLights)
     local unique = self:isUnique(serialization)
@@ -83,7 +113,7 @@ function roundClass:generate()
       lights[serialization]:setFlashClock(n)
       n = n + 1
     end
-    print('dead bulb sequence (backwards): ', serialization)
+    print('dead bulb sequence (backwards) for cheating & dev: ', serialization)
   end
 end
 
@@ -158,6 +188,7 @@ function isFinalLightOff()
 end
 
 function roundClass:update(dt)
+  self.levelTitle()
   if self.playerTurn == false then
     if self.doneFlashing == true then
       self:giveControlToPlayer()

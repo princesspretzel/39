@@ -14,7 +14,7 @@ function Star()
     h = height,
     r = .2,
     x = ((gameWidth / 2) - (width / 2) + 45),
-    y = -10
+    y = -30
   }
   setmetatable(instance, starClass)
   return instance

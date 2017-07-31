@@ -20,7 +20,7 @@ end
 function stringLights(num)
   -- hardcode alert (radius-aware)
   xBase = (gameWidth / 2) - 10
-  yBase = 200
+  yBase = 180
   for row = 1, num do
     xBase = xBase - 20
     local x = xBase
@@ -39,7 +39,7 @@ function stringLights(num)
 end
 
 function love.load()
-  love.window.setTitle( 'Christmas is ruined' )
+  love.window.setTitle('This game was made in July.')
   gameWidth, gameHeight = love.graphics.getDimensions()
 
   -- game state variables

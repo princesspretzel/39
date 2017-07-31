@@ -12,7 +12,7 @@ function Tree()
     h = height,
     r = .15,
     x = (gameWidth / 2) - 250,
-    y = 50
+    y = 30
   }
   setmetatable(instance, treeClass)
   return instance
